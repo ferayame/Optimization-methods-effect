@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 def imputation(data, k, filename):
     imputer = KNNImputer(n_neighbors=k)
     imputed_data = pd.DataFrame(imputer.fit_transform(data), columns=data.columns)
-    fileDirectory = f"webapp/output/Imputed_{filename}_using_KNN.csv"
+    fileDirectory = f"output/Imputed_{filename}_using_KNN.csv"
     imputed_data.to_csv(fileDirectory, index=False)
     return fileDirectory
 
