@@ -1,6 +1,6 @@
 from dash import html, dash_table, dcc
 import pandas as pd
-from algorithms import KNN_MLP, GA
+from algorithms import KNN_MLP, GA, MICE_RF
 import split_data
 
 
@@ -41,18 +41,24 @@ def missing_data_table():
     return missing_data_table
 
 test_value = 0.5
-
+#################################### KNN IMPUTATION ####################################
 std_data_impt_knn = KNN_MLP.imputation(std_data, 5, "Standardized_Data")
 X_train_std_knn, y_train_std_knn, X_test_std_knn, y_test_std_knn = split_data.split(pd.read_csv(std_data_impt_knn), test_value)
 
 data_impt_knn = KNN_MLP.imputation(data, 5, 'Data')
 X_train_knn, y_train_knn, X_test_knn, y_test_knn = split_data.split(pd.read_csv(data_impt_knn), test_value)
-
+#################################### GA IMPUTATION ####################################
 std_data_impt_ga = GA.imputation_std_data(std_data, "Standardized_Data", test_value)
 X_train_std_ga, y_train_std_ga, X_test_std_ga, y_test_std_ga = split_data.split(pd.read_csv(std_data_impt_ga), test_value)
 
 data_impt_ga = GA.imputation_data(data, 'Data', test_value)
 X_train_ga, y_train_ga, X_test_ga, y_test_ga = split_data.split(pd.read_csv(data_impt_ga), test_value)
+#################################### MICE IMPUTATION ####################################
+std_data_impt_mice = MICE_RF.imputation_with_mice_rf(std_data, "Standardized_Data")
+X_train_std_mice, y_train_std_mice, X_test_std_mice, y_test_std_mice = split_data.split(pd.read_csv(std_data_impt_mice), test_value)
+
+data_impt_mice = MICE_RF.imputation_with_mice_rf(data, 'Data')
+X_train_mice, y_train_mice, X_test_mice, y_test_mice = split_data.split(pd.read_csv(data_impt_mice), test_value)
 
 def get_content():
     content = html.Div([html.Div(children=[html.P(["Using 'water potability' dataset to study the different types of optimisation and classification methods,",html.Br(),
@@ -75,7 +81,12 @@ def get_content():
                                                                 html.Div(children=[dcc.Graph(figure=KNN_MLP.classifying_data_MLP_bar(X_train_std_ga, y_train_std_ga, X_test_std_ga, y_test_std_ga, test_value)),
                                                                                     dcc.Graph(figure=KNN_MLP.classifying_data_MLP_pie(X_train_std_ga, y_train_std_ga, X_test_std_ga, y_test_std_ga))])],
                                                     className="cleanTest"),
-                                            html.Div(children=[html.Label(["MICE Algorithm"])], className="cleanTest"),
+                                            html.Div(children=[html.Label(["MICE Algorithm"]),
+                                                               html.Div(children=[dcc.Graph(figure=KNN_MLP.classifying_data_KNN_bar(X_train_std_mice, y_train_std_mice, X_test_std_mice, y_test_std_mice, test_value)),
+                                                                                    dcc.Graph(figure=KNN_MLP.classifying_data_KNN_pie(X_train_std_mice, y_train_std_mice, X_test_std_mice, y_test_std_mice))]),
+                                                                html.Div(children=[dcc.Graph(figure=KNN_MLP.classifying_data_MLP_bar(X_train_std_mice, y_train_std_mice, X_test_std_mice, y_test_std_mice, test_value)),
+                                                                                    dcc.Graph(figure=KNN_MLP.classifying_data_MLP_pie(X_train_std_mice, y_train_std_mice, X_test_std_mice, y_test_std_mice))])],
+                                                    className="cleanTest"),
                                             html.Div(children=[html.Label(["Escape Optimization"])], className="cleanTest"),
                                             html.Div(children=[html.Label(["HHO Algorithm"])], className="cleanTest"),
                                             html.Div(children=[html.Label(["SMA Algorithm"])], className="cleanTest")],
@@ -87,12 +98,23 @@ def get_content():
                                                                 html.Div(children=[dcc.Graph(figure=KNN_MLP.classifying_data_MLP_bar(X_train_knn, y_train_knn, X_test_knn, y_test_knn, test_value)),
                                                                                     dcc.Graph(figure=KNN_MLP.classifying_data_MLP_pie(X_train_knn, y_train_knn, X_test_knn, y_test_knn))])],
                                                     className="mixedTest"),
-                                            html.Div(children=[html.Label(["ESC Optimization"])], className="cleanTest"),
-                                            html.Div(children=[html.Label(["MICE Algorithm"])], className="cleanTest"),
-                                            html.Div(children=[html.Label(["GA Algorithm"])], className="cleanTest"),
-                                            html.Div(children=[html.Label(["fourth Algorithm"])], className="cleanTest"),
-                                            html.Div(children=[html.Label(["fifth Algorithm"])], className="cleanTest")],
-                                className="normal-data")],
+                                            html.Div(children=[html.Label(["Genetic Algorithm"]),
+                                                               html.Div(children=[dcc.Graph(figure=KNN_MLP.classifying_data_KNN_bar(X_train_ga, y_train_ga, X_test_ga, y_test_ga, test_value)),
+                                                                                    dcc.Graph(figure=KNN_MLP.classifying_data_KNN_pie(X_train_ga, y_train_ga, X_test_ga, y_test_ga))]),
+                                                                html.Div(children=[dcc.Graph(figure=KNN_MLP.classifying_data_MLP_bar(X_train_ga, y_train_ga, X_test_ga, y_test_ga, test_value)),
+                                                                                    dcc.Graph(figure=KNN_MLP.classifying_data_MLP_pie(X_train_ga, y_train_ga, X_test_ga, y_test_ga))])],
+                                                    className="cleanTest"),
+                                            html.Div(children=[html.Label(["MICE Algorithm"]),
+                                                               html.Div(children=[dcc.Graph(figure=KNN_MLP.classifying_data_KNN_bar(X_train_mice, y_train_mice, X_test_mice, y_test_mice, test_value)),
+                                                                                    dcc.Graph(figure=KNN_MLP.classifying_data_KNN_pie(X_train_mice, y_train_mice, X_test_mice, y_test_mice))]),
+                                                                html.Div(children=[dcc.Graph(figure=KNN_MLP.classifying_data_MLP_bar(X_train_mice, y_train_mice, X_test_mice, y_test_mice, test_value)),
+                                                                                    dcc.Graph(figure=KNN_MLP.classifying_data_MLP_pie(X_train_mice, y_train_mice, X_test_mice, y_test_mice))])],
+                                                    className="cleanTest"),
+                                            html.Div(children=[html.Label(["Escape Optimization"])], className="cleanTest"),
+                                            html.Div(children=[html.Label(["HHO Algorithm"])], className="cleanTest"),
+                                            html.Div(children=[html.Label(["SMA Algorithm"])], className="cleanTest")],
+                                className="normal-data"),
+                        html.Div(children=[html.Label(children=["Comparision"], className="title")], className='comparision')],
             className="main-content")
 
     return content
