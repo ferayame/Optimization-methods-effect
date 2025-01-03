@@ -25,7 +25,7 @@ def ESC(N, max_iter, lb, ub, dim, fobj):
     ub = np.array(ub)
 
     population = np.random.rand(N, dim) * (ub - lb) + lb
-    fitness = np.array([fobj(population)])
+    fitness = np.array([fobj(ind) for ind in population])
     idx = np.argsort(fitness)
     fitness = fitness[idx]
     population = population[idx]
@@ -125,10 +125,15 @@ def ESC(N, max_iter, lb, ub, dim, fobj):
 
     return fitness[0], population[0, :], fitness_history
 
-
-def test_function(data):
-    data = pd.DataFrame(data)
+def test_function(position):
+    data = pd.read_csv('data/water_potability.csv')
     X_train, y_train, X_test, y_test = split_data.split_and_mix(data)
+    
+    # Drop rows with NaN values
+    X_train = X_train.dropna()
+    y_train = y_train[X_train.index]
+    X_test = X_test.dropna()
+    y_test = y_test[X_test.index]
     
     knn = KNeighborsClassifier(n_neighbors=5)
     knn.fit(X_train, y_train)
@@ -139,19 +144,22 @@ def test_function(data):
 
 def impute_missing_values(data, best_position):
     dt = data.copy()
+    pos_index = 0
     for col in dt.columns:
         if dt[col].isnull().any():
-            dt[col] = dt[col].fillna(best_position)
+            num_missing = dt[col].isnull().sum()
+            dt.loc[dt[col].isnull(), col] = best_position[pos_index:pos_index + num_missing]
+            pos_index += num_missing
             
     return dt
 
 def imputation(data, filename):
-    missed_data = split_data.missing_data()
+    missed_data = split_data.missing_data(data)
     
-    ub, lb = bounds(missed_data, data)
+    lb, ub = bounds(missed_data, data)
     dim = len(ub)
 
-    Best_score, Best_pos, fitness_history = ESC(N=50, max_iter= 1000, lb=lb, ub=ub, dim=dim, fobj=test_function)
+    Best_score, Best_pos, fitness_history = ESC(N=50, max_iter=1000, lb=lb, ub=ub, dim=dim, fobj=test_function)
     print(Best_pos)
     imputed_data = impute_missing_values(data, Best_pos)
     fileDirectory = f"output/Imputed_{filename}_using_ESC.csv"
