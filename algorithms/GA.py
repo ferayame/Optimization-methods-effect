@@ -5,7 +5,6 @@ from sklearn.metrics import accuracy_score
 from sklearn.neighbors import KNeighborsClassifier
 from deap import base, creator, tools, algorithms
 import split_data
-from pandasgui import show
 
 def define_bounds_and_indices(missed_data, full_data):
     bounds_list = []
@@ -36,8 +35,8 @@ def fitness_function(individual, missed_data, col_to_indices, X_train, y_train, 
     knn.fit(X_train, y_train)
     y_pred_combined = knn.predict(X_test_combined)
     accuracy = accuracy_score(Y_test_combined, y_pred_combined)
-    
-    return accuracy,
+        
+    return accuracy, 
 
 def setup_genetic_algorithm(bounds_list):
     creator.create("FitnessMax", base.Fitness, weights=(1.0,))
@@ -82,7 +81,7 @@ def imputation_data(data, filename, test_size):
     
     bounds_list, col_to_indices = define_bounds_and_indices(missed_data, data)
     
-    X_train, y_train, X_test, y_test = split_data.split_and_clean_data(test_size)
+    X_train, y_train, X_test, y_test = split_data.split_and_clean(data, test_size)
     
     toolbox = setup_genetic_algorithm(bounds_list)
     toolbox.register("evaluate", fitness_function, missed_data=missed_data, col_to_indices=col_to_indices, X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test)
@@ -92,14 +91,15 @@ def imputation_data(data, filename, test_size):
     imputed_data = apply_optimized_solution(missed_data, best_ind, col_to_indices, data)
     fileDirectory = f"output/Imputed_{filename}_using_GA.csv"
     imputed_data.to_csv(fileDirectory, index=False)
+    
     return fileDirectory
     
 def imputation_std_data(data, filename, test_size):
-    missed_data = split_data.missing_data()
+    missed_data = split_data.missing_data(data)
     
     bounds_list, col_to_indices = define_bounds_and_indices(missed_data, data)
     
-    X_train, y_train, X_test, y_test = split_data.split_and_clean_std_data(test_size)
+    X_train, y_train, X_test, y_test = split_data.split_and_clean(data, test_size)
     
     toolbox = setup_genetic_algorithm(bounds_list)
     toolbox.register("evaluate", fitness_function, missed_data=missed_data, col_to_indices=col_to_indices, X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test)
