@@ -78,7 +78,7 @@ def apply_optimized_solution(missed_data, best_ind, col_to_indices, data):
     return missed_data
 
 def imputation_data(data, filename, test_size):
-    missed_data = split_data.missing_data()
+    missed_data = split_data.missing_data(data)
     
     bounds_list, col_to_indices = define_bounds_and_indices(missed_data, data)
     
