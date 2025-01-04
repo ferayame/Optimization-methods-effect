@@ -106,7 +106,7 @@ def ESC(N, max_iter, lb, ub, dim, fobj, data, test_size):
 
         new_population = np.clip(new_population, lb, ub)
 
-        new_fitness = np.array([fobj(ind) for ind in new_population])
+        new_fitness = np.array([fobj(data, ind, test_size) for ind in new_population])
 
         for i in range(N):
             if new_fitness[i] < fitness[i]:
