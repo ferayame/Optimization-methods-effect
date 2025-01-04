@@ -1,6 +1,6 @@
 from dash import html, dash_table, dcc
 import pandas as pd
-from algorithms import KNN_MLP
+from algorithms import KNN_MLP, ESC
 import split_data
 
 
@@ -73,6 +73,14 @@ X_train_std_itim, y_train_std_itim, X_test_std_itim, y_test_std_itim = split_dat
 # data_impt_itim = Iterative_Imputer.imputation(data, 'Data')
 data_impt_itim = 'output/Imputed_Data_using_Iterative_Imputer.csv'
 X_train_itim, y_train_itim, X_test_itim, y_test_itim = split_data.split(pd.read_csv(data_impt_itim), test_value)
+#################################### ESC IMPUTATION ####################################
+std_data_impt_esc = ESC.imputation(std_data, "Standardized_Data", test_value)
+# std_data_impt_itim = 'output/Imputed_Standardized_Data_using_Iterative_Imputer.csv'
+X_train_std_esc, y_train_std_esc, X_test_std_esc, y_test_std_esc = split_data.split(pd.read_csv(std_data_impt_esc), test_value)
+
+data_impt_esc = ESC.imputation(data, 'Data', test_value)
+# data_impt_itim = 'output/Imputed_Data_using_Iterative_Imputer.csv'
+X_train_esc, y_train_esc, X_test_esc, y_test_esc = split_data.split(pd.read_csv(data_impt_esc), test_value)
 
 def get_content():
     content = html.Div([html.Div(children=[html.P(["Using 'water potability' dataset to study the different types of optimisation and classification methods,",html.Br(),
@@ -101,7 +109,12 @@ def get_content():
                                                                 html.Div(children=[dcc.Graph(figure=KNN_MLP.classifying_data_MLP_bar(X_train_std_mice, y_train_std_mice, X_test_std_mice, y_test_std_mice, test_value)),
                                                                                     dcc.Graph(figure=KNN_MLP.classifying_data_MLP_pie(X_train_std_mice, y_train_std_mice, X_test_std_mice, y_test_std_mice))])],
                                                     className="cleanTest"),
-                                            html.Div(children=[html.Label(["Escape Optimization"])], className="cleanTest"),
+                                            html.Div(children=[html.Label(["Escape Optimization"]),
+                                                               html.Div(children=[dcc.Graph(figure=KNN_MLP.classifying_data_KNN_bar(X_train_std_esc, y_train_std_esc, X_test_std_esc, y_test_std_esc, test_value)),
+                                                                                    dcc.Graph(figure=KNN_MLP.classifying_data_KNN_pie(X_train_std_esc, y_train_std_esc, X_test_std_esc, y_test_std_esc))]),
+                                                                html.Div(children=[dcc.Graph(figure=KNN_MLP.classifying_data_MLP_bar(X_train_std_esc, y_train_std_esc, X_test_std_esc, y_test_std_esc, test_value)),
+                                                                                    dcc.Graph(figure=KNN_MLP.classifying_data_MLP_pie(X_train_std_esc, y_train_std_esc, X_test_std_esc, y_test_std_esc))])],
+                                                    className="cleanTest"),
                                             html.Div(children=[html.Label(["HHO Algorithm"])], className="cleanTest"),
                                             html.Div(children=[html.Label(["Iterative Imputer"]),
                                                                html.Div(children=[dcc.Graph(figure=KNN_MLP.classifying_data_KNN_bar(X_train_std_itim, y_train_std_itim, X_test_std_itim, y_test_std_itim, test_value)),
@@ -129,7 +142,12 @@ def get_content():
                                                                 html.Div(children=[dcc.Graph(figure=KNN_MLP.classifying_data_MLP_bar(X_train_mice, y_train_mice, X_test_mice, y_test_mice, test_value)),
                                                                                     dcc.Graph(figure=KNN_MLP.classifying_data_MLP_pie(X_train_mice, y_train_mice, X_test_mice, y_test_mice))])],
                                                     className="cleanTest"),
-                                            html.Div(children=[html.Label(["Escape Optimization"])], className="cleanTest"),
+                                            html.Div(children=[html.Label(["Escape Optimization"]),
+                                                               html.Div(children=[dcc.Graph(figure=KNN_MLP.classifying_data_KNN_bar(X_train_esc, y_train_esc, X_test_esc, y_test_esc, test_value)),
+                                                                                    dcc.Graph(figure=KNN_MLP.classifying_data_KNN_pie(X_train_esc, y_train_esc, X_test_esc, y_test_esc))]),
+                                                                html.Div(children=[dcc.Graph(figure=KNN_MLP.classifying_data_MLP_bar(X_train_esc, y_train_esc, X_test_esc, y_test_esc, test_value)),
+                                                                                    dcc.Graph(figure=KNN_MLP.classifying_data_MLP_pie(X_train_esc, y_train_esc, X_test_esc, y_test_esc))])],
+                                                    className="cleanTest"),
                                             html.Div(children=[html.Label(["HHO Algorithm"])], className="cleanTest"),
                                             html.Div(children=[html.Label(["Iterative Imputer"]),
                                                                html.Div(children=[dcc.Graph(figure=KNN_MLP.classifying_data_KNN_bar(X_train_itim, y_train_itim, X_test_itim, y_test_itim, test_value)),
