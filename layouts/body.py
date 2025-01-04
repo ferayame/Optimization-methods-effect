@@ -58,20 +58,20 @@ X_train_std_ga, y_train_std_ga, X_test_std_ga, y_test_std_ga = split_data.split(
 data_impt_ga = 'output/Imputed_Data_using_GA.csv'
 X_train_ga, y_train_ga, X_test_ga, y_test_ga = split_data.split(pd.read_csv(data_impt_ga), test_value)
 #################################### MICE IMPUTATION ####################################
-std_data_impt_mice = MICE_RF.imputation(std_data, "Standardized_Data")
-# std_data_impt_mice = 'output/Imputed_Standardized_Data_using_MICE.csv'
+# std_data_impt_mice = MICE_RF.imputation(std_data, "Standardized_Data")
+std_data_impt_mice = 'output/Imputed_Standardized_Data_using_MICE.csv'
 X_train_std_mice, y_train_std_mice, X_test_std_mice, y_test_std_mice = split_data.split(pd.read_csv(std_data_impt_mice), test_value)
 
-data_impt_mice = MICE_RF.imputation(data, 'Data')
-# data_impt_mice = 'output/Imputed_Data_using_MICE.csv'
+# data_impt_mice = MICE_RF.imputation(data, 'Data')
+data_impt_mice = 'output/Imputed_Data_using_MICE.csv'
 X_train_mice, y_train_mice, X_test_mice, y_test_mice = split_data.split(pd.read_csv(data_impt_mice), test_value)
 #################################### ITERATIVE IMPUTER IMPUTATION ####################################
-std_data_impt_itim = Iterative_Imputer.imputation(std_data, "Standardized_Data")
-# std_data_impt_itim = 'output/Imputed_Standardized_Data_using_Iterative_Imputer.csv'
+# std_data_impt_itim = Iterative_Imputer.imputation(std_data, "Standardized_Data")
+std_data_impt_itim = 'output/Imputed_Standardized_Data_using_Iterative_Imputer.csv'
 X_train_std_itim, y_train_std_itim, X_test_std_itim, y_test_std_itim = split_data.split(pd.read_csv(std_data_impt_itim), test_value)
 
-data_impt_itim = Iterative_Imputer.imputation(data, 'Data')
-# data_impt_itim = 'output/Imputed_Data_using_Iterative_Imputer.csv'
+# data_impt_itim = Iterative_Imputer.imputation(data, 'Data')
+data_impt_itim = 'output/Imputed_Data_using_Iterative_Imputer.csv'
 X_train_itim, y_train_itim, X_test_itim, y_test_itim = split_data.split(pd.read_csv(data_impt_itim), test_value)
 #################################### ESC IMPUTATION ####################################
 # std_data_impt_esc = ESC.imputation(std_data, "Standardized_Data", test_value)
