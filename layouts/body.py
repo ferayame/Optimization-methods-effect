@@ -74,12 +74,12 @@ X_train_std_itim, y_train_std_itim, X_test_std_itim, y_test_std_itim = split_dat
 data_impt_itim = 'output/Imputed_Data_using_Iterative_Imputer.csv'
 X_train_itim, y_train_itim, X_test_itim, y_test_itim = split_data.split(pd.read_csv(data_impt_itim), test_value)
 #################################### ESC IMPUTATION ####################################
-std_data_impt_esc = ESC.imputation(std_data, "Standardized_Data", test_value)
-# std_data_impt_itim = 'output/Imputed_Standardized_Data_using_Iterative_Imputer.csv'
+# std_data_impt_esc = ESC.imputation(std_data, "Standardized_Data", test_value)
+std_data_impt_esc = 'output/Imputed_Standardized_Data_using_ESC.csv'
 X_train_std_esc, y_train_std_esc, X_test_std_esc, y_test_std_esc = split_data.split(pd.read_csv(std_data_impt_esc), test_value)
 
-data_impt_esc = ESC.imputation(data, 'Data', test_value)
-# data_impt_itim = 'output/Imputed_Data_using_Iterative_Imputer.csv'
+# data_impt_esc = ESC.imputation(data, 'Data', test_value)
+data_impt_esc = 'output/Imputed_Data_using_ESC.csv'
 X_train_esc, y_train_esc, X_test_esc, y_test_esc = split_data.split(pd.read_csv(data_impt_esc), test_value)
 
 def get_content():
