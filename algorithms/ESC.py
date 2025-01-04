@@ -1,7 +1,6 @@
 import numpy as np
 import math
 from sklearn.neighbors import KNeighborsClassifier
-import pandas as pd
 from sklearn.metrics import accuracy_score
 import split_data
 
@@ -20,12 +19,12 @@ def bounds(missed_data, full_data):
     
     return upper_bound, lower_bound
 
-def ESC(N, max_iter, lb, ub, dim, fobj):
+def ESC(N, max_iter, lb, ub, dim, fobj, data):
     lb = np.array(lb)
     ub = np.array(ub)
 
     population = np.random.rand(N, dim) * (ub - lb) + lb
-    fitness = np.array([fobj(ind) for ind in population])
+    fitness = np.array([fobj(data, ind) for ind in population])
     idx = np.argsort(fitness)
     fitness = fitness[idx]
     population = population[idx]
@@ -125,15 +124,8 @@ def ESC(N, max_iter, lb, ub, dim, fobj):
 
     return fitness[0], population[0, :], fitness_history
 
-def test_function(position):
-    data = pd.read_csv('data/water_potability.csv')
-    X_train, y_train, X_test, y_test = split_data.split_and_mix(data)
-    
-    # Drop rows with NaN values
-    X_train = X_train.dropna()
-    y_train = y_train[X_train.index]
-    X_test = X_test.dropna()
-    y_test = y_test[X_test.index]
+def test_function(data, position):
+    X_train, y_train, X_test, y_test = split_data.split_and_clean(data)
     
     knn = KNeighborsClassifier(n_neighbors=5)
     knn.fit(X_train, y_train)
@@ -159,12 +151,8 @@ def imputation(data, filename):
     lb, ub = bounds(missed_data, data)
     dim = len(ub)
 
-    Best_score, Best_pos, fitness_history = ESC(N=50, max_iter=1000, lb=lb, ub=ub, dim=dim, fobj=test_function)
-    print(Best_pos)
+    Best_score, Best_pos, fitness_history = ESC(N=50, max_iter=1000, lb=lb, ub=ub, dim=dim, fobj=test_function, data=data)
     imputed_data = impute_missing_values(data, Best_pos)
     fileDirectory = f"output/Imputed_{filename}_using_ESC.csv"
     imputed_data.to_csv(fileDirectory, index=False)
     return fileDirectory
-
-data = pd.read_csv('data/water_potability.csv')
-imputation(data, 'Data')
