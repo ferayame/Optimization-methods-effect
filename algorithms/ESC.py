@@ -151,7 +151,7 @@ def imputation(data, filename, test_size):
     lb, ub = bounds(missed_data, data)
     dim = len(ub)
 
-    Best_score, Best_pos, fitness_history = ESC(N=50, max_iter=1000, lb=lb, ub=ub, dim=dim, fobj=test_function, data=data, test_size=test_size)
+    Best_score, Best_pos, fitness_history = ESC(N=50, max_iter=500, lb=lb, ub=ub, dim=dim, fobj=test_function, data=data, test_size=test_size)
     imputed_data = impute_missing_values(data, Best_pos)
     fileDirectory = f"output/Imputed_{filename}_using_ESC.csv"
     imputed_data.to_csv(fileDirectory, index=False)
