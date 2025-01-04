@@ -183,3 +183,20 @@ footer {
     background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
+#ga, #gan{
+    color: #44edf1;
+    border: 6px double #44edf1;
+}
+#mice, #micen{
+    color: #5af6d5;
+    border: 6px double #5af6d5;
+}
+#esc, #escn{
+    color:  #8afbb2;
+    border: 6px double  #8afbb2;
+}
+#ii, #iin{
+    color:  #c0fc8d ;
+    border: 6px double  #c0fc8d ;
+}
